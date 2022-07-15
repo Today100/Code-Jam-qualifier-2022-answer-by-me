@@ -3,7 +3,9 @@ Python Code Jam 2022 qualifier answer by me
 
 ### To Run:
 
-'''cmd
+```console
+
 cd qualifier
 python -m unittest
-'''
+
+```
