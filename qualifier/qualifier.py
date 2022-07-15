@@ -20,15 +20,45 @@ class RestaurantManager:
         already defined a staff dictionary.
         """
         self.staff = {}
+        self.special = {}
+
 
     async def __call__(self, request: Request):
-        """Handle a request received.
+        
+        server = request.scope
 
-        This is called for each request received by your application.
-        In here is where most of the code for your system should go.
 
-        :param request: request object
-            Request object containing information about the sent
-            request to your application.
-        """
-        ...
+
+        if server["type"] == "staff.offduty":
+            self.staff.pop(server["id"])
+        
+
+
+
+        elif server["type"] == "staff.onduty":
+
+            self.staff[server["id"]] = request
+            for s in server["speciality"]:
+                try:
+                    self.special[s].append(server["id"])
+                except:
+                    self.special[s] = [server["id"]]
+        
+
+
+
+        elif server["type"] == "order":
+
+            try:
+                found = self.staff[self.special[server["speciality"]][0]]
+
+            except IndexError:
+                found = self.staff[list(self.staff.keys())[0]]
+
+            full_order = await request.receive()
+
+            await found.send(full_order)
+
+            result = await found.receive()
+            await request.send(result)
+            

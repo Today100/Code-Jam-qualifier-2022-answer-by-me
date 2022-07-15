@@ -62,6 +62,7 @@ class RegistrationTests(QualifierTestCase):
 
     def test_manager_staff_dict(self):
         self.verify_staff_dict()
+        print("VARIFIED")
 
     async def test_staff_registration(self):
         id_ = STAFF_IDS[0]
